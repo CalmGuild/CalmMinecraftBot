@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "client": "node src/bot.js",
+    "start": "node bot.js"
   },
   "dependencies": {
     "discord.js": "^12.3.1",

@@ -20,6 +20,22 @@ bot.once('spawn', () => {
 
 bot.on('chat', (username, message, translate, jsonMsg, matches) => {
   if(!jsonMsg.extra[0].text.startsWith('§2Guild > ')) return;
+  
+  const msgarr = message.split(':');
 
-  webhookClient.send(message);
+  const embed =  {
+    timestamp: new Date(),
+    fields: [
+      {
+        name: "Author",
+        value: msgarr.shift()
+      },
+      {
+        name: "Message",
+        value: msgarr.join(':')
+      }
+    ]
+  };
+
+  webhookClient.send({ embeds: [embed] });
 });
