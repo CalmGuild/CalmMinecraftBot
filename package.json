@@ -1,6 +1,7 @@
 {
   "name": "guild-chat-bot",
   "version": "0.1.0",
+  "private": true,
   "scripts": {
     "client": "node src/bot.js",
   },
