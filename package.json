@@ -1,0 +1,12 @@
+{
+  "name": "guild-chat-bot",
+  "version": "0.1.0",
+  "scripts": {
+    "client": "node src/bot.js",
+  },
+  "dependencies": {
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
+    "mineflayer": "^2.28.1"
+  }
+}
