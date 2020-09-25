@@ -12,30 +12,36 @@ const config = {
 }
 if (process.env.MC_PASSWORD) config.password = process.env.MC_PASSWORD
 
-const bot = mineflayer.createBot(config);
+function createBot() {
+  const bot = mineflayer.createBot(config);
 
-bot.once('spawn', () => {
-  console.log('Bot spawned!');
-});
+  bot.once('spawn', () => {
+    console.log('Bot spawned!');
+  });
 
-bot.on('chat', (username, message, translate, jsonMsg, matches) => {
-  if(!jsonMsg.extra[0].text.startsWith('§2Guild > ')) return;
+  bot.on('chat', (username, message, translate, jsonMsg, matches) => {
+    if(!jsonMsg.extra[0].text.startsWith('§2Guild > ')) return;
   
-  const msgarr = message.split(':');
+    const msgarr = message.split(':');
 
-  const embed =  {
-    timestamp: new Date(),
-    fields: [
-      {
-        name: "Author",
-        value: msgarr.shift()
-      },
-      {
-        name: "Message",
-        value: msgarr.join(':')
-      }
-    ]
-  };
+    const embed =  {
+      timestamp: new Date(),
+      fields: [
+        {
+          name: "Author",
+          value: msgarr.shift()
+        },
+        {
+          name: "Message",
+          value: msgarr.join(':')
+        }
+      ]
+    };
 
-  webhookClient.send({ embeds: [embed] });
-});
+    webhookClient.send({ embeds: [embed] });
+  });
+  
+  bot.on('end', createBot);
+}
+
+createBot();
