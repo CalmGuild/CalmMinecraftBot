@@ -3,11 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node bot.js"
+    "start": "node src/bot.js",
+    "dev": "nodemon src/bot.js"
   },
   "dependencies": {
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
     "mineflayer": "^2.28.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
