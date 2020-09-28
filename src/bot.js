@@ -1,7 +1,10 @@
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
 const fs = require('fs');
+const http = require('http');
 const path = require('path');
+const bodyParser = require('body-parser');
+const express = require('express');
 const mineflayer = require('mineflayer');
 
 const config = {
@@ -20,8 +23,9 @@ files.forEach((file, i) => {
   events.push({ name, execute: require(`./events/${file}`) });
 });
 
+let bot;
 (function createBot() {
-  const bot = mineflayer.createBot(config);
+  bot = mineflayer.createBot(config);
 
   events.forEach((evt, i) => {
     bot.on(evt.name, (...args) => {
@@ -31,3 +35,24 @@ files.forEach((file, i) => {
 
   bot.on('end', createBot);
 })();
+
+const app = express();
+
+app.use(bodyParser.json());
+
+app.post('/chat', (req, res) => {
+  if (req.body.key === process.env.KEY) {
+    if (req.body.message) {
+      bot.chat(req.body.message);
+      res.status(200).json({ success: true, message: 'OK' });
+    } else {
+      res.status(400).json({ success: false, message: 'Bad Request' });
+    }
+  } else {
+    res.status(401).json({ success: false, message: 'Invalid API Key' });
+  }
+});
+
+app.listen(process.env.PORT, () => {
+  console.log(`HTTP listening on port ${process.env.PORT}`);
+});
