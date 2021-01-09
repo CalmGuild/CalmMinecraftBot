@@ -22,5 +22,10 @@ module.exports = function chat(bot, username, message, translate, jsonMsg, match
     ],
   };
 
-  guildChatLog.send({ embeds: [embed] });
+  try{
+    guildChatLog.send({ embeds: [embed] });
+  } catch {
+    console.log("Error sending embed... aborting.");
+  }
+
 };
