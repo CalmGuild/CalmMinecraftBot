@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const guildChatLog = new Discord.WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN);
 
 module.exports = function chat(bot, username, message, translate, jsonMsg, matches) {
-  if(jsonMsg.extra === undefined) return;
+  if (jsonMsg.extra === undefined) return;
   if (!jsonMsg.extra[0].text.startsWith('§2Guild > ')) return;
 
   const msgarr = message.split(':');
@@ -22,10 +22,19 @@ module.exports = function chat(bot, username, message, translate, jsonMsg, match
     ],
   };
 
-  try{
-    guildChatLog.send({ embeds: [embed] });
-  } catch {
-    console.log("Error sending embed... aborting.");
+  let errored = false;
+  embed.fields.forEach(field => {
+    if(field === undefined) errored = true;
+  })
+
+  if(!errored){
+    try {
+      guildChatLog.send({ embeds: [embed] });
+    } catch {
+      console.log('Error sending embed... aborting.');
+    }
+  } else {
+    console.log('Error sending embed... aborting.');
   }
 
 };
