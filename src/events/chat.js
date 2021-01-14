@@ -29,7 +29,9 @@ module.exports = function chat(bot, username, message, translate, jsonMsg, match
 
   if(!errored){
     try {
-      guildChatLog.send({ embeds: [embed] });
+      guildChatLog.send({ embeds: [embed] }).catch((err) => {
+        console.log('Error sending embed... aborting.');
+      });
     } catch {
       console.log('Error sending embed... aborting.');
     }
