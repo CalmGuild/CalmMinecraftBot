@@ -1,4 +1,5 @@
-const Discord = require('discord.js');
+const Discord,
+  { Util } = require('discord.js');
 
 const guildChatLog = new Discord.WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN);
 
@@ -8,11 +9,11 @@ module.exports = function chat(bot, username, message, translate, jsonMsg, match
 
   const name = getNameFromMessage(message.split(':').shift());
   sendEmbed({
-    description: message.split(':')[1],
+    description: Util.cleanContent(message.split(':')[1]),
     color: '#12a602',
     timestamp: new Date(),
     author: {
-      name: message.split(':').shift(),
+      name: Util.cleanContent(message.split(':').shift()),
       icon_url: 'https://mc-heads.net/avatar/' + name,
     },
   });
