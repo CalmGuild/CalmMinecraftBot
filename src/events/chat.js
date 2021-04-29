@@ -6,37 +6,24 @@ module.exports = function chat(bot, username, message, translate, jsonMsg, match
   if (jsonMsg.extra === undefined) return;
   if (!jsonMsg.extra[0].text.startsWith('§2Guild > ')) return;
 
-  const msgarr = message.split(':');
-
-  const embed = {
+  const name = getNameFromMessage(message.split(':').shift());
+  sendEmbed({
+    description: message.split(':')[1],
+    color: '#12a602',
     timestamp: new Date(),
-    fields: [
-      {
-        name: 'Author',
-        value: msgarr.shift(),
-      },
-      {
-        name: 'Message',
-        value: msgarr.join(':'),
-      },
-    ],
-  };
-
-  let errored = false;
-  embed.fields.forEach(field => {
-    if(field === undefined) errored = true;
-  })
-
-  if(!errored){
-    try {
-      guildChatLog.send({ embeds: [embed] }).catch((err) => {
-        console.log('Error sending embed... aborting.');
-      });
-    } catch {
-      console.log('Error sending embed... aborting.');
-    }
-  } else {
-    console.log('Error sending embed... aborting.');
-  }
-
+    author: {
+      name: message.split(':').shift(),
+      icon_url: 'https://mc-heads.net/avatar/' + name,
+    },
+  });
 };
+
+function sendEmbed(embed) {
+  guildChatLog.send({ embeds: [embed] }).catch(console.error);
+}
+
+function getNameFromMessage(msg) {
+  const args = msg.split(' ');
+  if (args[0].startsWith('[')) return args[1];
+  return args[0];
+}
