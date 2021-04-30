@@ -35,5 +35,5 @@ function getPlayerDataFromMessage(msg) {
     }
     return { name: args[1], color: color };
   }
-  return { name: args[0], color: '12a602' };
+  return { name: args[0], color: '#12a602' };
 }
