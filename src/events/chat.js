@@ -1,39 +1,36 @@
 const { WebhookClient, Util, Message } = require('discord.js');
 
-const guildChatLog = new WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN);
+const hook = new WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN);
 
 module.exports = function chat(bot, username, message, translate, jsonMsg, matches) {
   if (jsonMsg.extra === undefined) return;
   if (!jsonMsg.extra[0].text.startsWith('§2Guild > ')) return;
+  
+  const i = message.indexOf(":");
+  if (i === -1) return; // no colon, so it's a join/leave message
 
-  const data = getPlayerDataFromMessage(message.split(':').shift());
-  sendEmbed({
-    description: Util.escapeMarkdown(message.split(':')[1]),
-    color: data.color,
-    timestamp: new Date(),
-    author: {
-      name: Util.escapeMarkdown(message.split(':').shift()),
-      icon_url: 'https://mc-heads.net/avatar/' + data.name,
-    },
-  });
+  const name = message.slice(8, i); // slice guild prefix off
+  const usrMsg = Util.removeMentions(Util.escapeMarkdown(message.slice(i + 2))); // remove mentions, escape markdown, and slice name off
+
+  const j = name.indexOf("] ");
+  let ign = name.slice(j !== -1 ? j + 2 : 0); // trim hypixel rank off
+
+  const k = ign.indexOf(" ");
+  ign = ign.slice(0, k !== -1 ? k : ign.length); // trim guild rank off
+
+  const rank = j !== -1 ? name.slice(1, j) : "";
+  let color = "12a602";
+
+  if (rank === "MOD") color = "00aa00"
+  else if (rank === "MVP++") color = "ffaa00";
+  else if (rank.startsWith("MVP")) color = "55ffff";
+  else if (rank.startsWith("VIP")) color = "55ff55";
+
+  const embed = new MessageEmbed()
+    .setAuthor(name, `https://mc-heads.net/avatar/${ign}`)
+    .setDescription(usrMsg)
+    .setColor(color)
+    .setTimestamp();
+
+  hook.send({ embeds: [embed]} );
 };
-
-function sendEmbed(embed) {
-  guildChatLog.send({ embeds: [embed] }).catch(console.error);
-}
-
-function getPlayerDataFromMessage(msg) {
-  const args = msg.split(' ');
-  if (args[0].startsWith('[')) {
-    let color = '';
-    if (args[0].startsWith('[VIP')) {
-      color = '#27f238';
-    } else if (args[0].startsWith("[MVP++")){
-      color = "#f5c311"
-    } else {
-       color = '#4fe2ff';
-    }
-    return { name: args[1], color: color };
-  }
-  return { name: args[0], color: '#12a602' };
-}
