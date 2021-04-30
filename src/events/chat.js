@@ -1,4 +1,4 @@
-const { WebhookClient, Util, Message } = require('discord.js');
+const { WebhookClient, Util, MessageEmbed } = require('discord.js');
 
 const hook = new WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN);
 
@@ -9,7 +9,7 @@ module.exports = function chat(bot, username, message, translate, jsonMsg, match
   const i = message.indexOf(":");
   if (i === -1) return; // no colon, so it's a join/leave message
 
-  const name = message.slice(8, i); // slice guild prefix off
+  const name = message.slice(0, i); // slice guild prefix off
   const usrMsg = Util.removeMentions(Util.escapeMarkdown(message.slice(i + 2))); // remove mentions, escape markdown, and slice name off
 
   const j = name.indexOf("] ");
