@@ -3,7 +3,7 @@ const { WebhookClient, Util, Message } = require('discord.js');
 const hook = new WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN);
 
 module.exports = function chat(bot, username, message, translate, jsonMsg, matches) {
-  if (jsonMsg.extra === undefined) return;
+  if (!jsonMsg.extra) return;
   if (!jsonMsg.extra[0].text.startsWith('§2Guild > ')) return;
   
   const i = message.indexOf(":");
