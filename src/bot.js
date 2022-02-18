@@ -11,6 +11,7 @@ const config = {
   host: process.env.SERVER_IP,
   username: process.env.MC_USERNAME,
   password: process.env.MC_PASSWORD,
+  auth: process.env.MICROSOFT_AUTH.toLowerCase() === 'true' ? 'microsoft' : 'mojang',
   version: '1.8',
 };
 
